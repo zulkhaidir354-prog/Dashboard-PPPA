@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Data Kesejahteraan & Perlindungan Anak Kota Parepare</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-dark-glow: #131e35;
+            --card-bg: rgba(23, 37, 67, 0.85);
+            --text-white: #ffffff;
+            --text-muted: #cbd5e1;
+            --primary-blue: #38bdf8;
+            --bright-white: #f8fafc;
+            --border-glow: rgba(56, 189, 248, 0.3);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --btn-blue: linear-gradient(145deg, #38bdf8, #0284c7);
+        }
+
+        body {
+            font-family: 'Satoshi', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            
+            background: linear-gradient(rgba(19, 30, 53, 0.75), rgba(19, 30, 53, 0.85)), url('pemandangan.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1150px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--border-glow);
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        header img {
+            height: 135px;
+            width: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+            animation: putarBalik3D 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes putarBalik3D {
+            0% { transform: perspective(600px) rotateY(0deg); }
+            50% { transform: perspective(600px) rotateY(180deg); }
+            100% { transform: perspective(600px) rotateY(360deg); }
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--bright-white);
+            margin: 0 0 12px 0;
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        header h1 span {
+            color: var(--primary-blue);
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 6px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+
+        header p {
+            font-size: 14.5px;
+            color: var(--bright-white);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 16px;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .btn-kustom-glow {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--btn-blue);
+            border: 3px solid #ffffff;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 2px #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .btn-kustom-glow:hover {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 1), inset 0 0 15px rgba(255, 255, 255, 0.7);
+            transform: scale(1.02);
+        }
+
+        .btn-back {
+            background: #64748b;
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .section-separator {
+            margin: 50px 0 30px 0;
+            border-top: 2px dashed rgba(56, 189, 248, 0.2);
+            position: relative;
+        }
+
+        .grid-grafik {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+            margin-bottom: 35px;
+        }
+
+        /* Grid khusus 3 kolom untuk kartu persentase */
+        .grid-persentase-kartu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-grafik { grid-template-columns: 1fr; }
+            .grid-persentase-kartu { grid-template-columns: 1fr; }
+        }
+
+        .card-stat-mini {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .card-stat-mini h4 {
+            margin: 0 0 6px 0;
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-stat-mini .stat-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+
+        .card-stat-mini .stat-perc {
+            font-size: 12px;
+            color: #4ade80;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .chart-box {
+            background: rgba(15, 23, 42, 0.85);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-glow);
+            margin-bottom: 25px;
+        }
+
+        .chart-box h3 {
+            margin-top: 0;
+            color: var(--bright-white);
+            font-size: 15px;
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 12px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        .tabel-rekap-wrapper {
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glow);
+        }
+
+        .tabel-dasbor-modern {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: center;
+        }
+
+        .tabel-dasbor-modern th {
+            background-color: rgba(56, 189, 248, 0.12);
+            color: var(--primary-blue);
+            font-weight: 700;
+            padding: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .tabel-dasbor-modern td {
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--bright-white);
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+
+        .tabel-dasbor-modern tr:hover td {
+            background-color: rgba(56, 189, 248, 0.08);
+        }
+
+        .tabel-dasbor-modern tr.row-total td {
+            background-color: rgba(56, 189, 248, 0.18);
+            color: var(--primary-blue);
+            font-weight: 700;
+            border-top: 2px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .sumber-data-label {
+            font-size: 12px;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 12px;
+            display: block;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 8px;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--bright-white);
+            background: rgba(0,0,0,0.4);
+            padding: 8px 20px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="logo parepare.png" alt="Logo Kota Parepare">
+        <h1>Sistem Informasi Terpadu PPA <span>Dinas Pemberdayaan Perempuan dan Perlindungan Anak Kota Parepare</span></h1>
+        <p>Platform Integrasi Visualisasi Analisis Terpadu Perlindungan Perempuan & Anak</p>
+    </header>
+
+    <div id="pageMenu" class="page active">
+        <div class="menu-container">
+            <button class="btn-kustom-glow" onclick="bukaHalaman('grafik')">Lihat Informasi Kasus</button>
+        </div>
+    </div>
+
+    <div id="pageGrafik" class="page">
+        <button class="btn-back" onclick="bukaHalaman('menu')">&larr; Kembali ke Menu</button>
+        
+        <div class="chart-box">
+            <h3>DATA DEMOGRAFI PENDUDUK PEREMPUAN DAN ANAK KOTA PAREPARE</h3>
+            
+            <div class="grid-persentase-kartu">
+                <div class="card-stat-mini">
+                    <h4>Total Penduduk (Semua Usia)</h4>
+                    <div class="stat-val">165.137</div>
+                    <div class="stat-perc" style="color: #cbd5e1;">Basis 100% Wilayah</div>
+                </div>
+                <div class="card-stat-mini">
+                    <h4>Proporsi Kelompok Anak (0-17 Thn)</h4>
+                    <div class="stat-val">51.532</div>
+                    <div class="stat-perc">31,21% Dari Total Penduduk</div>
+                </div>
+                <div class="card-stat-mini">
+                    <h4>Proporsi Perempuan (Anak + Dewasa)</h4>
+                    <div class="stat-val">82.958</div>
+                    <div class="stat-perc">50,24% Dominasi Gender</div>
+                </div>
+            </div>
+
+            <div class="tabel-rekap-wrapper">
+                <table class="tabel-dasbor-modern">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">URAIAN KELOMPOK DATA DEMOGRAFI</th>
+                            <th>LAKI-LAKI</th>
+                            <th>PEREMPUAN</th>
+                            <th>TOTAL JIWA</th>
+                            <th>PERSENTASE PROPORSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">Anak-Anak (Usia 0 - 17 Tahun)</td>
+                            <td>26.614</td>
+                            <td>24.918</td>
+                            <td>51.532</td>
+                            <td style="color: #4ade80; font-weight: 700;">31,21%</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">Penduduk Perempuan Dewasa</td>
+                            <td>-</td>
+                            <td>58.040</td>
+                            <td>58.040</td>
+                            <td style="color: #4ade80; font-weight: 700;">35,15%</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td style="text-align: left;">TOTAL PENDUDUK (SEMUA USIA)</td>
+                            <td>82.179</td>
+                            <td>82.958</td>
+                            <td>165.137</td>
+                            <td>100,00%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="sumber-data-label">Sumber Data: Dinas Kependudukan dan Pencatatan Sipil Kota Parepare</span>
+        </div>
+
+        <div class="grid-grafik">
+            <div class="chart-box">
+                <h3>0.A. Persentase Segmentasi Penduduk Makro</h3>
+                <div class="chart-wrapper"><canvas id="chartDemografiDonut"></canvas></div>
+            </div>
+            <div class="chart-box">
+                <h3>0.B. Komparasi Gender Kelompok Anak (0-17 Tahun)</h3>
+                <div class="chart-wrapper"><canvas id="chartAnakPie"></canvas></div>
+            </div>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <div class="chart-box">
+            <h3>DATA KASUS KEKERASAN TERHADAP PEREMPUAN DAN ANAK KOTA PAREPARE</h3>
+            <div class="tabel-rekap-wrapper">
+                <table class="tabel-dasbor-modern">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">KASUS</th>
+                            <th>2021</th>
+                            <th>2022</th>
+                            <th>2023</th>
+                            <th>2024</th>
+                            <th>2025</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">KEKERASAN TERHADAP PEREMPUAN (DEWASA) (KTP)</td>
+                            <td>5</td>
+                            <td>9</td>
+                            <td>8</td>
+                            <td>15</td>
+                            <td>36</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">KEKERASAN TERHADAP ANAK (KTA)</td>
+                            <td>16</td>
+                            <td>37</td>
+                            <td>39</td>
+                            <td>40</td>
+                            <td>61</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">KEKERASAN DALAM RUMAH TANGGA (KDRT)</td>
+                            <td>20</td>
+                            <td>20</td>
+                            <td>18</td>
+                            <td>27</td>
+                            <td>2</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td style="text-align: left;">TOTAL</td>
+                            <td>41</td>
+                            <td>66</td>
+                            <td>65</td>
+                            <td>82</td>
+                            <td>99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="sumber-data-label">Sumber Data : Simfoni PPA KPPPA & UPT Perlindungan Perempuan dan Anak Kota Parepare</span>
+        </div>
+
+        <div class="grid-grafik">
+            <div class="chart-box">
+                <h3>1.A. Tren Kenaikan Kasus Kekerasan (Garis Akumulasi)</h3>
+                <div class="chart-wrapper"><canvas id="chartTrenGaris"></canvas></div>
+            </div>
+            <div class="chart-box">
+                <h3>1.B. Komparasi Sektoral Per Kategori Kasus Kekerasan</h3>
+                <div class="chart-wrapper"><canvas id="chartBatangKategori"></canvas></div>
+            </div>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <div class="chart-box">
+            <h3>DATA DISPENSASI NIKAH KOTA PAREPARE</h3>
+            <div class="tabel-rekap-wrapper">
+                <table class="tabel-dasbor-modern">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">KECAMATAN</th>
+                            <th>2021</th>
+                            <th>2022</th>
+                            <th>2023</th>
+                            <th>2024</th>
+                            <th>2025</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">BACUKIKI</td>
+                            <td>26</td>
+                            <td>39</td>
+                            <td>20</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">UJUNG</td>
+                            <td>36</td>
+                            <td>23</td>
+                            <td>19</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">SOREANG</td>
+                            <td>38</td>
+                            <td>32</td>
+                            <td>6</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">BACUKIKI BARAT</td>
+                            <td>28</td>
+                            <td>25</td>
+                            <td>20</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td style="text-align: left;">TOTAL</td>
+                            <td>128</td>
+                            <td>119</td>
+                            <td>65</td>
+                            <td>70</td>
+                            <td>124</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="sumber-data-label">Sumber Data : Pengadilan Agama Kota Parepare</span>
+        </div>
+
+        <div class="grid-grafik">
+            <div class="chart-box" style="grid-column: span 2;">
+                <h3>2.A. Grafik Fluktuatif Gelombang Data Dispensasi Nikah Berkala (2021-2025)</h3>
+                <div class="chart-wrapper" style="height: 320px;"><canvas id="chartFluktuasiDispensasi"></canvas></div>
+            </div>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <div class="chart-box">
+            <h3>DATA PERKAWINAN ANAK KOTA PAREPARE</h3>
+            <div class="tabel-rekap-wrapper">
+                <table class="tabel-dasbor-modern">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="text-align: left; vertical-align: middle;">KECAMATAN</th>
+                            <th colspan="2">2023</th>
+                            <th colspan="2">2024</th>
+                            <th colspan="2">2025</th>
+                        </tr>
+                        <tr>
+                            <th>&lt; 18 Tahun</th>
+                            <th>18 - 19 Tahun</th>
+                            <th>&lt; 18 Tahun</th>
+                            <th>18 - 19 Tahun</th>
+                            <th>&lt; 18 Tahun</th>
+                            <th>18 - 19 Tahun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">BACUKIKI BARAT</td>
+                            <td>20</td>
+                            <td>0</td>
+                            <td>11</td>
+                            <td>33</td>
+                            <td>0</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">BACUKIKI</td>
+                            <td>12</td>
+                            <td>8</td>
+                            <td>6</td>
+                            <td>16</td>
+                            <td>12</td>
+                            <td>23</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">UJUNG</td>
+                            <td>19</td>
+                            <td>0</td>
+                            <td>3</td>
+                            <td>15</td>
+                            <td>2</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">SOREANG</td>
+                            <td>6</td>
+                            <td>0</td>
+                            <td>18</td>
+                            <td>23</td>
+                            <td>28</td>
+                            <td>58</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td style="text-align: left;">TOTAL</td>
+                            <td>57</td>
+                            <td>8</td>
+                            <td>38</td>
+                            <td>87</td>
+                            <td>42</td>
+                            <td>87</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="sumber-data-label">Sumber Data : Kantor Kemenag Kota Parepare</span>
+        </div>
+
+        <div class="grid-grafik">
+            <div class="chart-box" style="grid-column: span 2;">
+                <h3>3.A. Komparasi Fluktuasi Kelompok Umur Perkawinan Anak</h3>
+                <div class="chart-wrapper" style="height: 320px;"><canvas id="chartPerkawinanAnak"></canvas></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 Dinas Pemberdayaan Perempuan dan Perlindungan Anak (DP3A) Kota Parepare.</p>
+</footer>
+
+<script>
+    let charts = {};
+
+    function bukaHalaman(target) {
+        document.getElementById('pageMenu').classList.remove('active');
+        document.getElementById('pageGrafik').classList.remove('active');
+
+        if(target === 'menu') {
+            document.getElementById('pageMenu').classList.add('active');
+        } else if(target === 'grafik') {
+            document.getElementById('pageGrafik').classList.add('active');
+            tampilkanSemuaGrafik();
+        }
+    }
+
+    function tampilkanSemuaGrafik() {
+        // Bersihkan objek chart lama
+        Object.keys(charts).forEach(key => { if(charts[key]) charts[key].destroy(); });
+
+        const konfigurasiSkalaBawaan = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#ffffff', font: { size: 11, weight: 'bold' } } }
+            },
+            scales: {
+                x: { ticks: { color: '#ffffff', font: { weight: 'bold' } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+                y: { beginAtZero: true, ticks: { color: '#ffffff', font: { weight: 'bold' } }, grid: { color: 'rgba(255,255,255,0.06)' } }
+            }
+        };
+
+        // Get Contexts
+        const ctxDemografi = document.getElementById('chartDemografiDonut').getContext('2d');
+        const ctxAnakPie = document.getElementById('chartAnakPie').getContext('2d');
+        const ctxGaris = document.getElementById('chartTrenGaris').getContext('2d');
+        const ctxBatang = document.getElementById('chartBatangKategori').getContext('2d');
+        const ctxFluktuasiDispensasi = document.getElementById('chartFluktuasiDispensasi').getContext('2d');
+        const ctxPerkawinanAnak = document.getElementById('chartPerkawinanAnak').getContext('2d');
+
+        // 0.A. CHART DEMOGRAFI MAKRO (DONUT)
+        charts.demografi = new Chart(ctxDemografi, {
+            type: 'doughnut',
+            data: {
+                labels: ['Kelompok Anak (0-17 Thn)', 'Perempuan Dewasa', 'Penduduk Pria Dewasa (Estimasi)'],
+                datasets: [{
+                    data: [51532, 58040, 55565], // 165137 - 51532 - 58040 = 55565
+                    backgroundColor: ['#38bdf8', '#ec4899', '#64748b'],
+                    borderWidth: 1,
+                    borderColor: '#131e35'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#ffffff', font: { weight: 'bold' } } }
+                }
+            }
+        });
+
+        // 0.B. CHART PROPORSI GENDER ANAK (PIE)
+        charts.anakPie = new Chart(ctxAnakPie, {
+            type: 'pie',
+            data: {
+                labels: ['Anak Laki-Laki (51.6%)', 'Anak Perempuan (48.4%)'],
+                datasets: [{
+                    data: [26614, 24918],
+                    backgroundColor: ['#0284c7', '#f43f5e'],
+                    borderWidth: 1,
+                    borderColor: '#131e35'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#ffffff', font: { weight: 'bold' } } }
+                }
+            }
+        });
+
+        // 1.A. GRAFIK KEKERASAN (LINE)
+        charts.garis = new Chart(ctxGaris, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'Total Akumulasi Kasus',
+                    data: [41, 66, 65, 82, 99],
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff'
+                }]
+            },
+            options: konfigurasiSkalaBawaan
+        });
+
+        // 1.B. GRAFIK KEKERASAN (BAR)
+        charts.batang = new Chart(ctxBatang, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    { label: 'KTP', data: [5, 9, 8, 15, 36], backgroundColor: '#ef4444' },
+                    { label: 'KTA', data: [16, 37, 39, 40, 61], backgroundColor: '#4ade80' },
+                    { label: 'KDRT', data: [20, 20, 18, 27, 2], backgroundColor: '#eab308' }
+                ]
+            },
+            options: konfigurasiSkalaBawaan
+        });
+
+        // 2.A. GRAFIK FLUKTUATIF DISPENSASI NIKAH (LINE)
+        charts.dispensasi = new Chart(ctxFluktuasiDispensasi, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    {
+                        label: 'Garis Fluktuasi Total Nilai Kota',
+                        data: [128, 119, 65, 70, 124],
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.08)',
+                        borderWidth: 4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#ffffff',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: konfigurasiSkalaBawaan
+        });
+
+        // 3.A. GRAFIK FLUKTUATIF PERKAWINAN ANAK (COMBO CHART MULTI BAR)
+        charts.perkawinan = new Chart(ctxPerkawinanAnak, {
+            type: 'bar',
+            data: {
+                labels: ['2023 (<18 Thn)', '2023 (18-19 Thn)', '2024 (<18 Thn)', '2024 (18-19 Thn)', '2025 (<18 Thn)', '2025 (18-19 Thn)'],
+                datasets: [
+                    {
+                        label: 'Soreang (Dominasi Tertinggi)',
+                        data: [6, 0, 18, 23, 28, 58],
+                        backgroundColor: '#ec4899',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Bacukiki Barat',
+                        data: [20, 0, 11, 33, 0, 2],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Total Gabungan Kasus Wilayah',
+                        data: [57, 8, 38, 87, 42, 87],
+                        type: 'line',
+                        borderColor: '#22c55e',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ffffff',
+                        fill: false
+                    }
+                ]
+            },
+            options: konfigurasiSkalaBawaan
+        });
+    }
+</script>
+</body>
+</html>
