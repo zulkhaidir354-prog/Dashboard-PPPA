@@ -29,7 +29,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(19, 30, 53, 0.75), rgba(19, 30, 53, 0.85)), url('pemandangan.jpg');
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.85) 70%, #000000 100%), 
+                        linear-gradient(rgba(19, 30, 53, 0.5), rgba(19, 30, 53, 0.7)), 
+                        url('pemandangan.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -37,29 +39,43 @@
             overflow-x: hidden;
         }
 
-        /* --- Gaya Ornamen Mandala Berputar (Kiri & Kanan) --- */
+        /* --- Gaya Ornamen Mandala Berputar --- */
         .mandala-hiasan {
             position: fixed;
             width: 450px;
             height: auto;
-            opacity: 0.08; /* Dibuat samar dan elegan sebagai latar belakang */
-            z-index: -1;   /* Berada di paling belakang agar tidak menutupi text/tombol */
-            pointer-events: none; /* Anti-klik agar tidak mengganggu navigasi */
+            opacity: 0.08;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        .mandala-kiri {
+        /* Mandala Baru Bagian Atas (Muter Searah Jarum Jam Kecepatan Sedang) */
+        .mandala-atas-kiri {
+            top: -150px;
+            left: -150px;
+            animation: putarSearahJarum 15s linear infinite;
+        }
+
+        .mandala-atas-kanan {
+            top: -150px;
+            right: -150px;
+            animation: putarSearahJarum 15s linear infinite;
+        }
+
+        /* Mandala Bagian Bawah */
+        .mandala-bawah-kiri {
             bottom: -150px;
             left: -150px;
             animation: putarSearahJarum 50s linear infinite;
         }
 
-        .mandala-kanan {
+        .mandala-bawah-kanan {
             bottom: -150px;
             right: -150px;
             animation: putarBerlawananJarum 50s linear infinite;
         }
 
-        /* Animasi Rotasi */
+        /* Rumus Animasi Putar */
         @keyframes putarSearahJarum {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -69,7 +85,63 @@
             from { transform: rotate(360deg); }
             to { transform: rotate(0deg); }
         }
-        /* --------------------------------------------------- */
+
+        /* Logo berputar balik ke belakang secara 3D (Y-Axis) kontinu */
+        .logo-3d-putar {
+            height: 130px;
+            margin-bottom: 15px;
+            perspective: 1000px;
+            animation: putarBalikLogo 8s ease-in-out infinite;
+        }
+
+        @keyframes putarBalikLogo {
+            0% { transform: rotateY(0deg); }
+            40% { transform: rotateY(180deg); }
+            60% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* Overlay Loading dengan teks sedang memuat data */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 15, 30, 0.9);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spinner-loading {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(56, 189, 248, 0.2);
+            border-top: 6px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .teks-loading {
+            color: var(--bright-white);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         .container {
             width: 100%;
@@ -89,7 +161,6 @@
             margin-bottom: 35px;
         }
 
-        header img { height: 130px; margin-bottom: 15px; }
         header h1 { font-size: 26px; color: var(--bright-white); margin: 0; }
         header h1 span { color: var(--primary-blue); display: block; font-size: 18px; margin-top: 6px; }
 
@@ -169,6 +240,7 @@
         @media (max-width: 768px) { .grid-grafik { grid-template-columns: 1fr; } .grid-persentase-kartu { grid-template-columns: 1fr; } }
 
         .chart-wrapper { position: relative; height: 260px; width: 100%; }
+        .chart-wrapper-full { position: relative; height: 320px; width: 100%; }
         .tabel-rekap-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 10px; }
         .tabel-dasbor-modern { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
         .tabel-dasbor-modern th { background: rgba(56, 189, 248, 0.12); color: var(--primary-blue); padding: 10px; border: 1px solid rgba(56, 189, 248, 0.2); }
@@ -180,32 +252,47 @@
 </head>
 <body>
 
-<img src="mandala.png" class="mandala-hiasan mandala-kiri" alt="Mandala Kiri">
-<img src="mandala.png" class="mandala-hiasan mandala-kanan" alt="Mandala Kanan">
+<!-- Kontainer Animasi Memuat Data (2 Detik) -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-loading"></div>
+    <div class="teks-loading">SEDANG MEMUAT DATA...</div>
+</div>
+
+<!-- BARU: Elemen Hiasan Mandala Atas Kiri & Kanan Berputar Searah Jarum Jam Kecepatan Sedang (15s) -->
+<img src="mandala.jpg" class="mandala-hiasan mandala-atas-kiri" alt="Mandala Atas Kiri">
+<img src="mandala.jpg" class="mandala-hiasan mandala-atas-kanan" alt="Mandala Atas Kanan">
+
+<!-- Elemen Hiasan Mandala Bawah Kiri & Kanan Berputar Pelan -->
+<img src="mandala.png" class="mandala-hiasan mandala-bawah-kiri" alt="Mandala Bawah Kiri">
+<img src="mandala.png" class="mandala-hiasan mandala-bawah-kanan" alt="Mandala Bawah Kanan">
 
 <div class="container">
     <header>
-        <img src="logo parepare.png" alt="Logo Kota Parepare">
+        <!-- Logo dengan class animasi putar balik 3D -->
+        <img src="logo parepare.png" class="logo-3d-putar" alt="Logo Kota Parepare">
         <h1>Sistem Informasi Terpadu PPA <span>Dinas Pemberdayaan Perempuan dan Perlindungan Anak Kota Parepare</span></h1>
     </header>
 
+    <!-- Halaman 1: Menu Utama -->
     <div id="pageMenu" class="page active">
         <div class="menu-container">
-            <button class="btn-kustom-glow" onclick="bukaSubMenu()">Masuk Ke Dashboard Terpadu</button>
+            <button class="btn-kustom-glow" onclick="pemicuLoadingPindah('pageSubMenu')">Masuk Ke Dashboard Terpadu</button>
         </div>
     </div>
 
+    <!-- Halaman 2: 2 Pilihan Cabang -->
     <div id="pageSubMenu" class="page">
-        <button class="btn-back" onclick="pindahHalaman('pageMenu')">&larr; Kembali ke Menu Utama</button>
+        <button class="btn-back" onclick="pemicuLoadingPindah('pageMenu')">&larr; Kembali ke Menu Utama</button>
         <div class="menu-container">
             <h3 style="color:white; text-align:center; margin-bottom:10px;">PILIH METODE MONITORING DATA</h3>
-            <button class="btn-kustom-glow" onclick="bukaDashboardTetap()" style="background: linear-gradient(145deg, #a78bfa, #7c3aed);">1. Dashboard Demografi Statis (Persentase Makro)</button>
-            <button class="btn-kustom-glow" onclick="bukaDashboardRealtime()" style="background: linear-gradient(145deg, #34d399, #059669);">2. Dashboard Real-Time (Filter Tahun Berkala)</button>
+            <button class="btn-kustom-glow" onclick="pemicuLoadingDashboardStatis()" style="background: linear-gradient(145deg, #a78bfa, #7c3aed);">1. Dashboard Demografi Statis (Persentase Makro)</button>
+            <button class="btn-kustom-glow" onclick="pemicuLoadingDashboardRealtime()" style="background: linear-gradient(145deg, #34d399, #059669);">2. Dashboard Real-Time (Filter Tahun Berkala)</button>
         </div>
     </div>
 
+    <!-- Halaman 3: Dashboard Statis -->
     <div id="pageStatis" class="page">
-        <button class="btn-back" onclick="pindahHalaman('pageSubMenu')">&larr; Kembali ke Pilihan</button>
+        <button class="btn-back" onclick="pemicuLoadingPindah('pageSubMenu')">&larr; Kembali ke Pilihan</button>
         
         <div class="chart-box">
             <h3>DISTRIBUSI DATA MAKRO KEPENDUDUKAN (PERSENTASE INFORMATIF)</h3>
@@ -263,7 +350,7 @@
                     </tbody>
                 </table>
             </div>
-            <span class="sumber-data-label">Sumber Data: Dinas Kependudukan dan Pencatatan Sipil Kota Parepare (Sheet 3)</span>
+            <span class="sumber-data-label">Sumber Data: Dinas Kependudukan dan Pencatatan Sipil Kota Parepare (Tab Basis Data)</span>
         </div>
 
         <div class="grid-grafik">
@@ -278,8 +365,9 @@
         </div>
     </div>
 
+    <!-- Halaman 4: Dashboard Real-Time -->
     <div id="pageRealtime" class="page">
-        <button class="btn-back" onclick="pindahHalaman('pageSubMenu')">&larr; Kembali ke Pilihan</button>
+        <button class="btn-back" onclick="pemicuLoadingPindah('pageSubMenu')">&larr; Kembali ke Pilihan</button>
         
         <div class="filter-container">
             <label style="color:white; font-weight:bold;">SINKRONISASI TAHUN ACUAN DATA:</label>
@@ -292,8 +380,15 @@
             </select>
         </div>
 
-        <div id="statusKoneksiSheets" class="loading-text" style="display:none;">Sedang Menghubungkan ke 3 Sheet Google Spreadsheet...</div>
+        <div id="statusKoneksiSheets" class="loading-text" style="display:none;">Sedang Menghubungkan ke Google Spreadsheet...</div>
 
+        <!-- Grafik fluktuasi garis dari tahun ke tahun ditempatkan di bagian atas data real-time -->
+        <div class="chart-box">
+            <h3>GRAFIK TREN FLUKTUASI KASUS KEKERASAN TAHUNAN (2021 - 2025)</h3>
+            <div class="chart-wrapper-full"><canvas id="chartFluktuasiTahunan"></canvas></div>
+        </div>
+
+        <!-- Bagian 1: Data Kasus Kekerasan -->
         <div class="chart-box">
             <h3>A. DATA KASUS KEKERASAN PEREMPUAN & ANAK (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -309,27 +404,31 @@
                     </tbody>
                 </table>
             </div>
+            <span class="sumber-data-label">Sumber Data: UPTD PPA Dinas PPPA Kota Parepare (Tab Data Kasus)</span>
         </div>
 
+        <!-- Bagian 2: Data Dispensasi Kawin -->
         <div class="chart-box">
             <h3>B. REKAP DISPENSASI NIKAH PER KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
                 <table class="tabel-dasbor-modern">
                     <thead>
-                        <tr><th style="text-align:left;">Kecamatan</th><th>Bacukiki</th><th>Ujung</th><th>Soreang</th><th>Bacukiki Barat</th><th class="row-total">TOTAL</th></tr>
+                        <tr><th style="text-align:left;">Uraian Wilayah Pengadilan</th><th class="row-total">TOTAL PENGAJUAN DISPENSASI</th></tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-align:left; font-weight:bold;">Jumlah Pengajuan</td>
-                            <td id="dispBacukiki">0</td><td id="dispUjung">0</td><td id="dispSoreang">0</td><td id="dispBacubarat">0</td><td id="dispTotal" style="font-weight:bold; color:#38bdf8;">0</td>
+                            <td style="text-align:left; font-weight:bold;">Total Pengajuan Seluruh Kecamatan Kota Parepare</td>
+                            <td id="dispTotal" style="font-size:16px; font-weight:bold; color:#38bdf8;">0</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <span class="sumber-data-label">Sumber Data: Pengadilan Agama Kota Parepare (Tab Dispensasi Kawin)</span>
         </div>
 
+        <!-- Bagian 3: Data Perkawinan Anak -->
         <div class="chart-box">
-            <h3>C. DATA PERKAWINAN KELOMPOK UMUR ANAK (<span class="lblTahun">2025</span>)</h3>
+            <h3>C. DATA PERKAWINAN KELOMPOK UMUR ANAK KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
                 <table class="tabel-dasbor-modern">
                     <thead>
@@ -347,6 +446,7 @@
                     </tbody>
                 </table>
             </div>
+            <span class="sumber-data-label">Sumber Data: Kantor Urusan Agama (KUA) Se-Kota Parepare / Dinas PPPA</span>
         </div>
 
         <div class="grid-grafik">
@@ -355,7 +455,7 @@
                 <div class="chart-wrapper"><canvas id="chartKekerasanRt"></canvas></div>
             </div>
             <div class="chart-box">
-                <h3>Distribusi Wilayah Dispensasi Nikah</h3>
+                <h3>Distribusi Sektoral Kategori Kasus Tahun Berjalan</h3>
                 <div class="chart-wrapper"><canvas id="chartDispensasiRt"></canvas></div>
             </div>
         </div>
@@ -367,7 +467,6 @@
     
     const URL_TAB_KEKERASAN = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     const URL_TAB_DISPENSASI = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=406620483`;
-    const URL_TAB_PENDUDUK = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=2038099255`;
 
     let dataRtKekerasan = {};
     let dataRtDispensasi = {};
@@ -375,44 +474,69 @@
 
     let objChartKekerasan = null;
     let objChartDispensasi = null;
+    let objChartFluktuasi = null;
     let chartDonutStatis = null;
     let chartPieStatis = null;
 
-    function pindahHalaman(idHalaman) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(idHalaman).classList.add('active');
+    function pemicuLoadingPindah(idHalamanTarget) {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('active');
+        
+        setTimeout(() => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(idHalamanTarget).classList.add('active');
+            overlay.classList.remove('active');
+        }, 2000);
     }
 
-    function bukaSubMenu() { pindahHalaman('pageSubMenu'); }
+    function pemicuLoadingDashboardStatis() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('active');
+        
+        setTimeout(() => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('pageStatis').classList.add('active');
+            overlay.classList.remove('active');
+            bukaDashboardTetap();
+        }, 2000);
+    }
+
+    function pemicuLoadingDashboardRealtime() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('active');
+        
+        setTimeout(() => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('pageRealtime').classList.add('active');
+            overlay.classList.remove('active');
+            bukaDashboardRealtime();
+        }, 2000);
+    }
 
     function bukaDashboardTetap() {
-        pindahHalaman('pageStatis');
-        setTimeout(() => {
-            if(chartDonutStatis) chartDonutStatis.destroy();
-            if(chartPieStatis) chartPieStatis.destroy();
+        if(chartDonutStatis) chartDonutStatis.destroy();
+        if(chartPieStatis) chartPieStatis.destroy();
 
-            chartDonutStatis = new Chart(document.getElementById('chartDonutStatis'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Anak (0-17 Thn)', 'Perempuan Dewasa', 'Pria Dewasa (Estimasi)'],
-                    datasets: [{ data: [51532, 58040, 55565], backgroundColor: ['#38bdf8', '#ec4899', '#4b5563'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+        chartDonutStatis = new Chart(document.getElementById('chartDonutStatis'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Anak (0-17 Thn)', 'Perempuan Dewasa', 'Pria Dewasa (Estimasi)'],
+                datasets: [{ data: [51532, 58040, 55565], backgroundColor: ['#38bdf8', '#ec4899', '#4b5563'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-            chartPieStatis = new Chart(document.getElementById('chartPieStatis'), {
-                type: 'pie',
-                data: {
-                    labels: ['Anak Laki-Laki', 'Anak Perempuan'],
-                    datasets: [{ data: [26614, 24918], backgroundColor: ['#0284c7', '#f43f5e'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }, 150);
+        chartPieStatis = new Chart(document.getElementById('chartPieStatis'), {
+            type: 'pie',
+            data: {
+                labels: ['Anak Laki-Laki', 'Anak Perempuan'],
+                datasets: [{ data: [26614, 24918], backgroundColor: ['#0284c7', '#f43f5e'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
     }
 
     function bukaDashboardRealtime() {
-        pindahHalaman('pageRealtime');
         ambilSemuaDataGoogleSheets();
     }
 
@@ -428,14 +552,16 @@
             };
 
             dataRtDispensasi = {
-                "2021": {bcu: 26, ujg: 36, srg: 38, bcb: 28, tot: 128},
-                "2022": {bcu: 39, ujg: 23, srg: 32, bcb: 25, tot: 119},
-                "2023": {bcu: 20, ujg: 19, srg: 6, bcb: 20, tot: 65},
-                "2024": {bcu: 15, ujg: 15, srg: 20, bcb: 20, tot: 70},
-                "2025": {bcu: 30, ujg: 24, srg: 40, bcb: 30, tot: 124}
+                "2021": {tot: 128},
+                "2022": {tot: 119},
+                "2023": {tot: 65},
+                "2024": {tot: 70},
+                "2025": {tot: 124}
             };
 
             dataRtPerkawinan = {
+                "2021": {bb18:0, bb19:0, b18:0, b19:0, u18:0, u19:0, s18:0, s19:0},
+                "2022": {bb18:0, bb19:0, b18:0, b19:0, u18:0, u19:0, s18:0, s19:0},
                 "2023": {bb18:20, bb19:0, b18:12, b19:8, u18:19, u19:0, s18:6, s19:0},
                 "2024": {bb18:11, bb19:33, b18:6, b19:16, u18:3, u19:15, s18:18, s19:23},
                 "2025": {bb18:0, bb19:2, b18:12, b19:23, u18:2, u19:4, s18:28, s19:58}
@@ -443,10 +569,71 @@
 
             await Promise.all([ fetch(URL_TAB_KEKERASAN), fetch(URL_TAB_DISPENSASI) ]);
         } catch (e) {
-            console.log("Menggunakan database lokal.");
+            console.log("Menggunakan database sinkronisasi lokal.");
         }
         document.getElementById('statusKoneksiSheets').style.display = 'none';
+        
+        renderGrafikFluktuasiTahunan();
         prosesPerubahanTahun(document.getElementById('pilihTahun').value);
+    }
+
+    function renderGrafikFluktuasiTahunan() {
+        if(objChartFluktuasi) objChartFluktuasi.destroy();
+        
+        const tahunLabels = ["2021", "2022", "2023", "2024", "2025"];
+        const trenKTP = [5, 9, 8, 15, 36];
+        const trenKTA = [16, 37, 39, 40, 61];
+        const trenKDRT = [20, 20, 18, 27, 2];
+        const trenTotal = [41, 66, 65, 82, 99];
+
+        objChartFluktuasi = new Chart(document.getElementById('chartFluktuasiTahunan'), {
+            type: 'line',
+            data: {
+                labels: tahunLabels,
+                datasets: [
+                    {
+                        label: 'Total Seluruh Kasus',
+                        data: trenTotal,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#38bdf8',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Kekerasan Anak (KTA)',
+                        data: trenKTA,
+                        borderColor: '#4ade80',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        tension: 0.2,
+                        fill: false
+                    },
+                    {
+                        label: 'Kekerasan Perempuan (KTP)',
+                        data: trenKTP,
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        tension: 0.2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#f8fafc' } }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } }
+                }
+            }
+        });
     }
 
     function prosesPerubahanTahun(thn) {
@@ -458,11 +645,7 @@
         document.getElementById('cellKDRT').innerText = kks.kdrt;
         document.getElementById('cellTotalKekerasan').innerText = kks.total;
 
-        const dsp = dataRtDispensasi[thn] || {bcu:0, ujg:0, srg:0, bcb:0, tot:0};
-        document.getElementById('dispBacukiki').innerText = dsp.bcu;
-        document.getElementById('dispUjung').innerText = dsp.ujg;
-        document.getElementById('dispSoreang').innerText = dsp.srg;
-        document.getElementById('dispBacubarat').innerText = dsp.bcb;
+        const dsp = dataRtDispensasi[thn] || {tot:0};
         document.getElementById('dispTotal').innerText = dsp.tot;
 
         const kwn = dataRtPerkawinan[thn] || {bb18:0, bb19:0, b18:0, b19:0, u18:0, u19:0, s18:0, s19:0};
@@ -475,10 +658,10 @@
         document.getElementById('kawinS18').innerText = kwn.s18;
         document.getElementById('kawinS19').innerText = kwn.s19;
 
-        renderUlangGrafikRealtime(kks, dsp);
+        renderUlangGrafikRealtime(kks);
     }
 
-    function renderUlangGrafikRealtime(dataKekerasan, dataDispensasi) {
+    function renderUlangGrafikRealtime(dataKekerasan) {
         if(objChartKekerasan) objChartKekerasan.destroy();
         if(objChartDispensasi) objChartDispensasi.destroy();
 
@@ -498,10 +681,10 @@
         objChartDispensasi = new Chart(document.getElementById('chartDispensasiRt'), {
             type: 'polarArea',
             data: {
-                labels: ['Bacukiki', 'Ujung', 'Soreang', 'Bacukiki Barat'],
+                labels: ['Kekerasan Perempuan', 'Kekerasan Anak', 'Kasus KDRT'],
                 datasets: [{
-                    data: [dataDispensasi.bcu, dataDispensasi.ujg, dataDispensasi.srg, dataDispensasi.bcb],
-                    backgroundColor: ['rgba(56, 189, 248, 0.6)', 'rgba(167, 139, 250, 0.6)', 'rgba(244, 63, 94, 0.6)', 'rgba(52, 211, 153, 0.6)']
+                    data: [dataKekerasan.ktp, dataKekerasan.kta, dataKekerasan.kdrt],
+                    backgroundColor: ['rgba(239, 68, 68, 0.6)', 'rgba(74, 222, 128, 0.6)', 'rgba(234, 179, 8, 0.6)']
                 }]
             },
             options: { responsive: true, maintainAspectRatio: false }
