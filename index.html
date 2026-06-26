@@ -36,42 +36,43 @@
             overflow-x: hidden;
         }
 
-        /* --- Logo Mandala Center Tengah Kiri dan Kanan --- */
+        /* --- Logo Mandala Sisi Kiri dan Kanan Terpusat di Tengah (Vertikal) --- */
         .mandala-hiasan {
             position: fixed;
             width: 480px;
-            height: auto;
-            opacity: 0.15;
+            height: 480px;
+            opacity: 0.18; /* Sedikit dinaikkan opacity-nya agar lebih terlihat */
             z-index: 0;
             pointer-events: none;
-            top: 50%; /* Center secara vertikal */
+            top: 50%;
+            object-fit: contain;
         }
 
         .mandala-kiri-center {
-            left: -160px;
-            transform: translateY(-50%);
-            /* Putar Searah Jarum Jam */
-            animation: spinClockwise 30s linear infinite;
+            left: -180px;
+            /* Menggunakan animasi putar searah jarum jam */
+            animation: spinClockwise 40s linear infinite;
         }
 
         .mandala-kanan-center {
-            right: -160px;
-            transform: translateY(-50%);
-            /* Putar Berlawanan Arah Jarum Jam */
-            animation: spinCounter 30s linear infinite;
+            right: -180px;
+            /* Menggunakan animasi putar berlawanan arah jarum jam */
+            animation: spinCounter 40s linear infinite;
         }
 
+        /* Animasi Putar Searah Jarum Jam (Clockwise) */
         @keyframes spinClockwise {
             0% { transform: translateY(-50%) rotate(0deg); }
             100% { transform: translateY(-50%) rotate(360deg); }
         }
 
+        /* Animasi Putar Berlawanan Arah Jarum Jam (Counter-Clockwise) */
         @keyframes spinCounter {
             0% { transform: translateY(-50%) rotate(360deg); }
             100% { transform: translateY(-50%) rotate(0deg); }
         }
 
-        /* Logo berputar balik 3D kontinu */
+        /* Logo utama Pemkot berputar balik 3D kontinu */
         .logo-3d-putar {
             height: 120px;
             margin-bottom: 20px;
@@ -162,7 +163,7 @@
             font-weight: 900;
         }
         
-        /* Teks Model Biru Neon & Enter Kebawah untuk Kota Parepare */
+        /* Teks Model Biru Neon */
         .teks-neon-lengkap {
             color: #38bdf8;
             display: block;
@@ -176,7 +177,7 @@
         }
 
         .teks-neon-lengkap span {
-            display: block; /* Memaksa teks Kota Parepare turun ke bawah */
+            display: block;
             margin-top: 4px;
             color: #ffffff;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
@@ -270,15 +271,13 @@
 </head>
 <body>
 
-<!-- Kontainer Animasi Memuat Data -->
 <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner-loading"></div>
     <div class="teks-loading" id="txtLoading">SEDANG MEMUAT DATA...</div>
 </div>
 
-<!-- Elemen Hiasan Mandala Center Tengah Layar Sisi Kiri & Kanan -->
-<img src="mandala_2.jpg" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri">
-<img src="mandala_2.jpg" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan">
+<img src="image_a14cda.jpg" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri Berputar Searah">
+<img src="image_a14cda.jpg" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan Berputar Berlawanan">
 
 <div class="container mini-view" id="mainContainer">
     <header>
@@ -290,14 +289,12 @@
         </span>
     </header>
 
-    <!-- Halaman 1: Menu Utama -->
     <div id="pageMenu" class="page active">
         <div class="menu-container">
             <button class="btn-kustom-glow" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">Masuk Ke Dashboard Terpadu</button>
         </div>
     </div>
 
-    <!-- Halaman 2: Pilihan Cabang -->
     <div id="pageSubMenu" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageMenu', 1000, ubahLayoutMini)">&larr; Kembali</button>
         <div class="menu-container">
@@ -307,7 +304,6 @@
         </div>
     </div>
 
-    <!-- Halaman 3: Dashboard Statis -->
     <div id="pageStatis" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">&larr; Kembali ke Pilihan</button>
         
@@ -382,7 +378,6 @@
         </div>
     </div>
 
-    <!-- Halaman 4: Dashboard Real-Time -->
     <div id="pageRealtime" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">&larr; Kembali ke Pilihan</button>
         
@@ -397,7 +392,6 @@
             </select>
         </div>
 
-        <!-- Bagian 1: Data Kasus Kekerasan -->
         <div class="chart-box">
             <h3>A. DATA KASUS KEKERASAN PEREMPUAN, ANAK & KDRT (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -416,7 +410,6 @@
             <span class="sumber-data-label">Sumber Data: UPTD PPA Dinas PPPA Kota Parepare</span>
         </div>
 
-        <!-- Bagian 2: Data Dispensasi Kawin Per Kecamatan -->
         <div class="chart-box">
             <h3>B. REKAP DISPENSASI NIKAH PER KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -426,7 +419,7 @@
                     </thead>
                     <tbody>
                         <tr><td style="text-align:left;">Bacukiki Barat</td><td id="dispBB">0</td></tr>
-                        <tr><td style="text-align:left;">Bacukiki</td><td id="dispB">0</td></tr>
+                        <tr><td style="text-align:left;">Bacukiki</td><td id="disp|B">0</td></tr>
                         <tr><td style="text-align:left;">Ujung</td><td id="dispU">0</td></tr>
                         <tr><td style="text-align:left;">Soreang</td><td id="dispS">0</td></tr>
                         <tr class="row-total"><td style="text-align:left;">TOTAL DISPENSASI KAWIN KOTA</td><td id="dispTotal">0</td></tr>
@@ -436,7 +429,6 @@
             <span class="sumber-data-label">Sumber Data: Pengadilan Agama Kota Parepare</span>
         </div>
 
-        <!-- Bagian 3: Data Perkawinan Anak -->
         <div class="chart-box">
             <h3>C. DATA PERKAWINAN KELOMPOK UMUR ANAK KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -459,7 +451,6 @@
             <span class="sumber-data-label">Sumber Data: Kantor Urusan Agama (KUA) Se-Kota Parepare</span>
         </div>
 
-        <!-- Bagian Grafik Akumulatif Paling Bawah -->
         <div class="chart-box">
             <h3>GRAFIK TREN FLUKTUASI TAHUNAN AKUMULATIF (2021 - 2025)</h3>
             <div class="chart-wrapper-full"><canvas id="chartFluktuasiTahunan"></canvas></div>
@@ -600,7 +591,7 @@
                 plugins: { legend: { labels: { color: '#f8fafc', font: { size: 11 } } } },
                 scales: {
                     x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } }
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#cbd5e1' } }
                 }
             }
         });
@@ -617,7 +608,7 @@
 
         const dsp = dataRtDispensasi[thn] || {bb:"-", b:"-", u:"-", s:"-", tot:0};
         document.getElementById('dispBB').innerText = dsp.bb;
-        document.getElementById('dispB').innerText = dsp.b;
+        document.getElementById('disp|B').innerText = dsp.b;
         document.getElementById('dispU').innerText = dsp.u;
         document.getElementById('dispS').innerText = dsp.s;
         document.getElementById('dispTotal').innerText = dsp.tot;
