@@ -9,7 +9,8 @@
     
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 45%, #1e3a8a 75%, #e0f2fe 100%);
+            /* Poin 1: Mengubah arah gradasi menjadi 'to bottom' agar warna putih/terang berada di bawah tengah */
+            --bg-gradient: linear-gradient(to bottom, #020617 0%, #0f172a 45%, #1e3a8a 75%, #e0f2fe 100%);
             --card-bg: rgba(15, 23, 42, 0.85);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
@@ -35,12 +36,12 @@
             overflow-x: hidden;
         }
 
-        /* --- Mandala Baru Sisi Kiri dan Kanan Ukuran Full (Center Tengah Vertikal) --- */
+        /* --- Mandala Sisi Kiri dan Kanan Ukuran Full (Center Tengah Vertikal) --- */
         .mandala-hiasan {
             position: fixed;
-            width: 700px; /* Ukuran diperbesar agar terlihat full dan megah di sisi layar */
+            width: 700px; 
             height: 700px;
-            opacity: 0.15; /* Transparansi halus agar tulisan dashboard tetap kontras & mudah dibaca */
+            opacity: 0.15; 
             z-index: 0;
             pointer-events: none;
             top: 50%;
@@ -48,24 +49,20 @@
         }
 
         .mandala-kiri-center {
-            left: -300px; /* Bergeser setengah lingkaran ke luar layar kiri */
-            /* Berputar searah jarum jam */
+            left: -300px; 
             animation: spinClockwise 45s linear infinite;
         }
 
         .mandala-kanan-center {
-            right: -300px; /* Bergeser setengah lingkaran ke luar layar kanan */
-            /* Berputar berlawanan arah jarum jam */
+            right: -300px; 
             animation: spinCounter 45s linear infinite;
         }
 
-        /* Animasi Putar Searah Jarum Jam */
         @keyframes spinClockwise {
             0% { transform: translateY(-50%) rotate(0deg); }
             100% { transform: translateY(-50%) rotate(360deg); }
         }
 
-        /* Animasi Putar Berlawanan Arah Jarum Jam */
         @keyframes spinCounter {
             0% { transform: translateY(-50%) rotate(360deg); }
             100% { transform: translateY(-50%) rotate(0deg); }
@@ -565,6 +562,9 @@
         const trenKDRT = [20, 20, 18, 27, 2];
         const trenDispensasi = [128, 119, 65, 70, 124];
         const trenKawinAnak18 = [(12+8+11+15), (14+9+10+16), (20+12+19+6), (11+6+3+18), (0+12+2+28)];
+        
+        // Data tren Khusus Kekerasan Terhadap Anak (KTA) dari objek dataRtKekerasan
+        const trenKTA = [16, 37, 39, 40, 61];
 
         objChartFluktuasi = new Chart(document.getElementById('chartFluktuasiTahunan'), {
             type: 'line',
@@ -572,6 +572,8 @@
                 labels: tahunLabels,
                 datasets: [
                     { label: 'Total Kasus Kekerasan', data: trenTotalKasus, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', borderWidth: 3, pointRadius: 5, tension: 0.2 },
+                    /* Poin 2: Menambahkan garis hijau putus-putus untuk data Kekerasan Terhadap Anak */
+                    { label: 'Kekerasan Terhadap Anak (KTA)', data: trenKTA, borderColor: '#4ade80', borderWidth: 2.5, pointRadius: 4, borderDash: [5, 5], tension: 0.2, fill: false },
                     { label: 'Kasus KDRT', data: trenKDRT, borderColor: '#eab308', borderWidth: 2, pointRadius: 4, borderDash: [5, 5], tension: 0.2, fill: false },
                     { label: 'Total Dispensasi Nikah', data: trenDispensasi, borderColor: '#38bdf8', borderWidth: 3, pointRadius: 5, tension: 0.2 },
                     { label: 'Perkawinan Anak (<18 Thn)', data: trenKawinAnak18, borderColor: '#a78bfa', borderWidth: 2.5, pointRadius: 4, tension: 0.2 }
