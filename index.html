@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Terpadu Pemberdayaan Perempuan dan Perlindungan Anak Kota Parepare</title>
+    <title>Sistem Informasi Terpadu PPA Kota Parepare</title>
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root {
-            /* Poin 3: Kombinasi Gradasi Biru Navy dan Putih/Cyan Terang Kontras Tinggi */
+            /* Kombinasi Gradasi Biru Navy dan Putih/Cyan Terang Kontras Tinggi */
             --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 45%, #1e3a8a 75%, #e0f2fe 100%);
             --card-bg: rgba(15, 23, 42, 0.85);
             --text-white: #ffffff;
@@ -36,7 +36,7 @@
             overflow-x: hidden;
         }
 
-        /* --- Poin 1: Logo Mandala Center Tengah Kiri dan Kanan --- */
+        /* --- Logo Mandala Center Tengah Kiri dan Kanan --- */
         .mandala-hiasan {
             position: fixed;
             width: 480px;
@@ -50,12 +50,14 @@
         .mandala-kiri-center {
             left: -160px;
             transform: translateY(-50%);
+            /* Putar Searah Jarum Jam */
             animation: spinClockwise 30s linear infinite;
         }
 
         .mandala-kanan-center {
             right: -160px;
             transform: translateY(-50%);
+            /* Putar Berlawanan Arah Jarum Jam */
             animation: spinCounter 30s linear infinite;
         }
 
@@ -160,7 +162,7 @@
             font-weight: 900;
         }
         
-        /* Poin 2: Teks Model Biru Neon & Enter Kebawah untuk Kota Parepare */
+        /* Teks Model Biru Neon & Enter Kebawah untuk Kota Parepare */
         .teks-neon-lengkap {
             color: #38bdf8;
             display: block;
@@ -268,13 +270,15 @@
 </head>
 <body>
 
+<!-- Kontainer Animasi Memuat Data -->
 <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner-loading"></div>
     <div class="teks-loading" id="txtLoading">SEDANG MEMUAT DATA...</div>
 </div>
 
-<img src="mandala.jpg" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri">
-<img src="mandala.jpg" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan">
+<!-- Elemen Hiasan Mandala Center Tengah Layar Sisi Kiri & Kanan -->
+<img src="mandala_2.jpg" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri">
+<img src="mandala_2.jpg" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan">
 
 <div class="container mini-view" id="mainContainer">
     <header>
@@ -286,12 +290,14 @@
         </span>
     </header>
 
+    <!-- Halaman 1: Menu Utama -->
     <div id="pageMenu" class="page active">
         <div class="menu-container">
             <button class="btn-kustom-glow" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">Masuk Ke Dashboard Terpadu</button>
         </div>
     </div>
 
+    <!-- Halaman 2: Pilihan Cabang -->
     <div id="pageSubMenu" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageMenu', 1000, ubahLayoutMini)">&larr; Kembali</button>
         <div class="menu-container">
@@ -301,6 +307,7 @@
         </div>
     </div>
 
+    <!-- Halaman 3: Dashboard Statis -->
     <div id="pageStatis" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">&larr; Kembali ke Pilihan</button>
         
@@ -375,6 +382,7 @@
         </div>
     </div>
 
+    <!-- Halaman 4: Dashboard Real-Time -->
     <div id="pageRealtime" class="page">
         <button class="btn-back" onclick="pemicuLoadingMenu('pageSubMenu', 1000, ubahLayoutNormal)">&larr; Kembali ke Pilihan</button>
         
@@ -389,6 +397,7 @@
             </select>
         </div>
 
+        <!-- Bagian 1: Data Kasus Kekerasan -->
         <div class="chart-box">
             <h3>A. DATA KASUS KEKERASAN PEREMPUAN, ANAK & KDRT (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -407,6 +416,7 @@
             <span class="sumber-data-label">Sumber Data: UPTD PPA Dinas PPPA Kota Parepare</span>
         </div>
 
+        <!-- Bagian 2: Data Dispensasi Kawin Per Kecamatan -->
         <div class="chart-box">
             <h3>B. REKAP DISPENSASI NIKAH PER KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -426,6 +436,7 @@
             <span class="sumber-data-label">Sumber Data: Pengadilan Agama Kota Parepare</span>
         </div>
 
+        <!-- Bagian 3: Data Perkawinan Anak -->
         <div class="chart-box">
             <h3>C. DATA PERKAWINAN KELOMPOK UMUR ANAK KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -448,6 +459,7 @@
             <span class="sumber-data-label">Sumber Data: Kantor Urusan Agama (KUA) Se-Kota Parepare</span>
         </div>
 
+        <!-- Bagian Grafik Akumulatif Paling Bawah -->
         <div class="chart-box">
             <h3>GRAFIK TREN FLUKTUASI TAHUNAN AKUMULATIF (2021 - 2025)</h3>
             <div class="chart-wrapper-full"><canvas id="chartFluktuasiTahunan"></canvas></div>
@@ -565,6 +577,7 @@
         const tahunLabels = ["2021", "2022", "2023", "2024", "2025"];
         const trenTotalKasus = [41, 66, 65, 82, 99];
         const trenKTA = [16, 37, 39, 40, 61];
+        const trenKTP = [5, 9, 8, 15, 36];
         const trenKDRT = [20, 20, 18, 27, 2];
         const trenDispensasi = [128, 119, 65, 70, 124];
         
