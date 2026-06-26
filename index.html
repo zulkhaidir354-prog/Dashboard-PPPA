@@ -10,13 +10,13 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(to bottom, #020617 0%, #0f172a 50%, #111e3f 80%, rgba(240, 246, 255, 0.25) 100%);
-            /* Poin 1: Mengubah opasitas background box kontainer utama menjadi transparan 25% */
+            /* Box kontainer transparan sisa 25% */
             --card-bg: rgba(15, 23, 42, 0.25);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
             --primary-blue: #38bdf8;
             --bright-white: #f8fafc;
-            --border-glow: rgba(56, 189, 248, 0.65); /* Diperkuat agar tetap tegas menyala */
+            --border-glow: rgba(56, 189, 248, 0.65); /* Garis pinggir bercahaya dipertahankan tegas */
             --btn-blue: linear-gradient(145deg, #38bdf8, #0284c7);
         }
 
@@ -43,7 +43,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('PERAHU.jpg');
+            /* Perbaikan esktensi huruf besar agar sinkron dengan GitHub Pages */
+            background-image: url('./PERAHU.JPG');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -84,7 +85,7 @@
             100% { transform: translateY(-50%) rotate(0deg); }
         }
 
-        /* Poin 2: Memperkecil tinggi logo agar layout naik ke atas */
+        /* Ukuran logo diperkecil agar layout naik ke atas */
         .logo-3d-putar {
             height: 95px;
             margin-bottom: 15px;
@@ -140,7 +141,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Poin 2: Memperkecil padding & ukuran box utama agar tidak perlu scroll di layar 100% */
+        /* Ukuran box ringkas terhindar dari scroll layar 100% */
         .container {
             width: 100%;
             max-width: 780px;
@@ -196,7 +197,7 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Poin 2: Merapatkan gap dan margin agar menu pilihan naik ke atas/tengah secara presisi */
+        /* Jarak komponen menu yang naik ke tengah-atas secara seimbang */
         .menu-container {
             display: flex;
             flex-direction: column;
@@ -227,7 +228,7 @@
         .btn-kustom-glow:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(56, 189, 248, 0.8); color: white; }
         .btn-back { background: #475569; padding: 8px 16px; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 15px; font-weight: bold; font-size: 12px; }
 
-        /* Poin 1: Mengubah opasitas box konten dalam menjadi transparan 25% */
+        /* Box chart transparan sisa 25% */
         .chart-box {
             background: rgba(15, 23, 42, 0.25);
             padding: 20px;
