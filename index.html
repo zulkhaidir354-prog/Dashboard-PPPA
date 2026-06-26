@@ -9,7 +9,7 @@
     
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0b1528 0%, #112240 50%, #1e3a8a 100%);
+            --bg-gradient: linear-gradient(135deg, rgba(11, 21, 40, 0.9) 0%, rgba(17, 34, 64, 0.9) 50%, rgba(30, 58, 138, 0.85) 100%);
             --card-bg: rgba(23, 42, 79, 0.75);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
@@ -29,45 +29,36 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
+            /* Poin 3: Mengembalikan Background Pemandangan Utama */
+            background: linear-gradient(rgba(11, 21, 40, 0.65), rgba(11, 21, 40, 0.85)), url('background-pemandangan.jpg') no-repeat center center fixed;
+            background-size: cover;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* --- Gaya Ornamen Mandala yang Diperbesar & Full Kiri-Kanan --- */
+        /* --- Poin 1: Gaya Ornamen Mandala Kiri & Kanan --- */
         .mandala-hiasan {
             position: fixed;
-            width: 550px; /* Ukuran diperbesar */
+            width: 500px;
             height: auto;
-            opacity: 0.08;
-            z-index: -1;
+            opacity: 0.12;
+            z-index: 0;
             pointer-events: none;
         }
 
-        /* Posisi Full Kiri dan Kanan */
-        .mandala-kiri-tengah {
-            top: 50%;
-            left: -180px;
-            transform: translateY(-50%);
-            animation: putarSearahJarum 25s linear infinite;
+        .mandala-kiri-atas { top: -100px; left: -150px; animation: spinClockwise 25s linear infinite; }
+        .mandala-kiri-bawah { bottom: -150px; left: -150px; animation: spinCounter 40s linear infinite; }
+        .mandala-kanan-atas { top: -100px; right: -150px; animation: spinClockwise 25s linear infinite; }
+        .mandala-kanan-bawah { bottom: -150px; right: -150px; animation: spinCounter 40s linear infinite; }
+
+        @keyframes spinClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .mandala-kanan-tengah {
-            top: 50%;
-            right: -180px;
-            transform: translateY(-50%);
-            animation: putarBerlawananJarum 25s linear infinite;
-        }
-
-        @keyframes putarSearahJarum {
-            0% { transform: translateY(-50%) rotate(0deg); }
-            100% { transform: translateY(-50%) rotate(360deg); }
-        }
-
-        @keyframes putarBerlawananJarum {
-            0% { transform: translateY(-50%) rotate(360deg); }
-            100% { transform: translateY(-50%) rotate(0deg); }
+        @keyframes spinCounter {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
         }
 
         /* Logo berputar balik 3D kontinu */
@@ -127,24 +118,24 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Kontainer Utama - Lebar diperkecil 15-20% agar lebih proporsional */
+        /* Kontainer Kotak Biru Navy Diperkecil 15-20% */
         .container {
             width: 100%;
-            max-width: 920px; /* Diperkecil dari 1150px (Sekitar 20% Reduction) */
+            max-width: 920px;
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             padding: 40px;
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 40px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(56, 189, 248, 0.2);
             border: 1px solid var(--border-glow);
             position: relative;
             z-index: 1;
             transition: max-width 0.3s ease;
         }
 
-        /* Khusus layout halaman awal/menu supaya lebih kompak dan mewah */
         .container.mini-view {
-            max-width: 620px;
+            max-width: 650px;
         }
 
         header {
@@ -152,8 +143,19 @@
             margin-bottom: 35px;
         }
 
-        header h1 { font-size: 24px; color: var(--bright-white); margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); line-height: 1.4; }
-        header h1 span { color: var(--primary-blue); display: block; font-size: 16px; margin-top: 8px; font-weight: 500; }
+        header h1 { font-size: 24px; color: var(--bright-white); margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.6); line-height: 1.4; }
+        
+        /* Poin 2: Teks Model Biru Neon */
+        .teks-neon-dinas {
+            color: #38bdf8;
+            display: block;
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.8), 0 0 20px rgba(56, 189, 248, 0.4);
+        }
 
         .page { display: none; }
         .page.active { display: block; }
@@ -187,7 +189,7 @@
         .btn-back { background: #475569; padding: 10px 20px; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 25px; font-weight: bold; }
 
         .chart-box {
-            background: rgba(15, 32, 67, 0.9);
+            background: rgba(15, 32, 67, 0.92);
             padding: 24px;
             border-radius: 16px;
             border: 1px solid var(--border-glow);
@@ -248,14 +250,16 @@
     <div class="teks-loading" id="txtLoading">SEDANG MEMUAT DATA...</div>
 </div>
 
-<img src="mandala.jpg" class="mandala-hiasan mandala-kiri-tengah" alt="Mandala Kiri">
-<img src="mandala.jpg" class="mandala-hiasan mandala-kanan-tengah" alt="Mandala Kanan">
+<img src="mandala.jpg" class="mandala-hiasan mandala-kiri-atas" alt="Mandala Kiri Atas">
+<img src="mandala.png" class="mandala-hiasan mandala-kiri-bawah" alt="Mandala Kiri Bawah">
+<img src="mandala.jpg" class="mandala-hiasan mandala-kanan-atas" alt="Mandala Kanan Atas">
+<img src="mandala.png" class="mandala-hiasan mandala-kanan-bawah" alt="Mandala Kanan Bawah">
 
 <div class="container mini-view" id="mainContainer">
     <header>
         <img src="logo parepare.png" class="logo-3d-putar" alt="Logo Kota Parepare">
-        <h1 id="mainTitle">Sistem Informasi Terpadu<br>Pemberdayaan Perempuan dan Perlindungan Anak</h1>
-        <span id="subTitle">Kota Parepare</span>
+        <h1>Sistem Informasi Terpadu</h1>
+        <span class="teks-neon-dinas">Dinas Pemberdayaan Perempuan dan Perlindungan Anak</span>
     </header>
 
     <div id="pageMenu" class="page active">
@@ -395,7 +399,7 @@
                     </tbody>
                 </table>
             </div>
-            <span class="sumber-data-label">Sumber Data: Pengadilan Agama Kota Parepare (Catatan: Rincian Kecamatan Hanya 2021-2023)</span>
+            <span class="sumber-data-label">Sumber Data: Pengadilan Agama Kota Parepare</span>
         </div>
 
         <div class="chart-box">
@@ -439,7 +443,6 @@
 </div>
 
 <script>
-    // Database Internal Sinkronisasi Lokal Makro 2021 - 2025
     let dataRtKekerasan = {
         "2021": {ktp: 5, kta: 16, kdrt: 20, total: 41},
         "2022": {ktp: 9, kta: 37, kdrt: 20, total: 66},
@@ -470,20 +473,14 @@
     let chartDonutStatis = null;
     let chartPieStatis = null;
 
-    // Fungsi Pengendali Dimensi Lebar Kotak Utama
     function ubahLayoutMini() {
         document.getElementById('mainContainer').classList.add('mini-view');
-        document.getElementById('mainTitle').innerHTML = "Sistem Informasi Terpadu<br>Pemberdayaan Perempuan dan Perlindungan Anak";
-        document.getElementById('subTitle').style.display = "block";
     }
 
     function ubahLayoutNormal() {
         document.getElementById('mainContainer').classList.remove('mini-view');
-        document.getElementById('mainTitle').innerHTML = "Sistem Informasi Terpadu Pemberdayaan Perempuan dan Perlindungan Anak";
-        document.getElementById('subTitle').style.display = "block";
     }
 
-    // Loading Menu Utama & Cabang Selama Tepat 1 Detik
     function pemicuLoadingMenu(idHalamanTarget, durasi, fungsiCallback) {
         const overlay = document.getElementById('loadingOverlay');
         document.getElementById('txtLoading').innerText = "SEDANG MEMUAT DATA...";
@@ -497,7 +494,6 @@
         }, durasi);
     }
 
-    // Loading Filter Dropdown Tahun Selama Tepat 2 Detik
     function filterTahunBerubah(tahunTerpilih) {
         const overlay = document.getElementById('loadingOverlay');
         document.getElementById('txtLoading').innerText = `MENYINKRONKAN DATA TAHUN ${tahunTerpilih}...`;
@@ -545,58 +541,20 @@
         const tahunLabels = ["2021", "2022", "2023", "2024", "2025"];
         const trenTotalKasus = [41, 66, 65, 82, 99];
         const trenKTA = [16, 37, 39, 40, 61];
-        const trenKTP = [5, 9, 8, 15, 36];
         const trenKDRT = [20, 20, 18, 27, 2];
         const trenDispensasi = [128, 119, 65, 70, 124];
         
-        const trenKawinAnak18 = [
-            (12+8+11+15), // 2021
-            (14+9+10+16), // 2022
-            (20+12+19+6), // 2023
-            (11+6+3+18),  // 2024
-            (0+12+2+28)   // 2025
-        ];
+        const trenKawinAnak18 = [(12+8+11+15), (14+9+10+16), (20+12+19+6), (11+6+3+18), (0+12+2+28)];
 
         objChartFluktuasi = new Chart(document.getElementById('chartFluktuasiTahunan'), {
             type: 'line',
             data: {
                 labels: tahunLabels,
                 datasets: [
-                    {
-                        label: 'Total Kasus Kekerasan',
-                        data: trenTotalKasus,
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Kasus KDRT',
-                        data: trenKDRT,
-                        borderColor: '#eab308',
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        borderDash: [5, 5],
-                        tension: 0.2,
-                        fill: false
-                    },
-                    {
-                        label: 'Total Dispensasi Nikah',
-                        data: trenDispensasi,
-                        borderColor: '#38bdf8',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Perkawinan Anak (<18 Thn)',
-                        data: trenKawinAnak18,
-                        borderColor: '#a78bfa',
-                        borderWidth: 2.5,
-                        pointRadius: 4,
-                        tension: 0.2
-                    }
+                    { label: 'Total Kasus Kekerasan', data: trenTotalKasus, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', borderWidth: 3, pointRadius: 5, tension: 0.2 },
+                    { label: 'Kasus KDRT', data: trenKDRT, borderColor: '#eab308', borderWidth: 2, pointRadius: 4, borderDash: [5, 5], tension: 0.2, fill: false },
+                    { label: 'Total Dispensasi Nikah', data: trenDispensasi, borderColor: '#38bdf8', borderWidth: 3, pointRadius: 5, tension: 0.2 },
+                    { label: 'Perkawinan Anak (<18 Thn)', data: trenKawinAnak18, borderColor: '#a78bfa', borderWidth: 2.5, pointRadius: 4, tension: 0.2 }
                 ]
             },
             options: {
@@ -648,20 +606,11 @@
             type: 'bar',
             data: {
                 labels: ['KTP', 'KTA', 'KDRT'],
-                datasets: [{
-                    label: 'Jumlah Kasus Aktual',
-                    data: [dataKekerasan.ktp, dataKekerasan.kta, dataKekerasan.kdrt],
-                    backgroundColor: ['#ef4444', '#4ade80', '#eab308']
-                }]
+                datasets: [{ data: [dataKekerasan.ktp, dataKekerasan.kta, dataKekerasan.kdrt], backgroundColor: ['#ef4444', '#4ade80', '#eab308'] }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: '#cbd5e1' } },
-                    y: { ticks: { color: '#cbd5e1' } }
-                }
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                scales: { x: { ticks: { color: '#cbd5e1' } }, y: { ticks: { color: '#cbd5e1' } } }
             }
         });
 
@@ -669,15 +618,10 @@
             type: 'polarArea',
             data: {
                 labels: ['KTP', 'KTA', 'KDRT'],
-                datasets: [{
-                    data: [dataKekerasan.ktp, dataKekerasan.kta, dataKekerasan.kdrt],
-                    backgroundColor: ['rgba(239, 68, 68, 0.6)', 'rgba(74, 222, 128, 0.6)', 'rgba(234, 179, 8, 0.6)']
-                }]
+                datasets: [{ data: [dataKekerasan.ktp, dataKekerasan.kta, dataKekerasan.kdrt], backgroundColor: ['rgba(239, 68, 68, 0.6)', 'rgba(74, 222, 128, 0.6)', 'rgba(234, 179, 8, 0.6)'] }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#f8fafc' } } },
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#f8fafc' } } },
                 scales: { r: { ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.1)' } } }
             }
         });
