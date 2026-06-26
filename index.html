@@ -33,7 +33,43 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* --- Gaya Ornamen Mandala Berputar (Kiri & Kanan) --- */
+        .mandala-hiasan {
+            position: fixed;
+            width: 450px;
+            height: auto;
+            opacity: 0.08; /* Dibuat samar dan elegan sebagai latar belakang */
+            z-index: -1;   /* Berada di paling belakang agar tidak menutupi text/tombol */
+            pointer-events: none; /* Anti-klik agar tidak mengganggu navigasi */
+        }
+
+        .mandala-kiri {
+            bottom: -150px;
+            left: -150px;
+            animation: putarSearahJarum 50s linear infinite;
+        }
+
+        .mandala-kanan {
+            bottom: -150px;
+            right: -150px;
+            animation: putarBerlawananJarum 50s linear infinite;
+        }
+
+        /* Animasi Rotasi */
+        @keyframes putarSearahJarum {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes putarBerlawananJarum {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        /* --------------------------------------------------- */
 
         .container {
             width: 100%;
@@ -44,6 +80,8 @@
             border-radius: 24px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.1);
             border: 1px solid var(--border-glow);
+            position: relative;
+            z-index: 1;
         }
 
         header {
@@ -128,7 +166,7 @@
         .card-stat-mini .stat-perc { font-size: 12px; color: #4ade80; font-weight: 700; margin-top: 4px; }
 
         .grid-grafik { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        @media (max-width: 768px) { .grid-grafik { grid-template-columns: 1fr; .grid-persentase-kartu { grid-template-columns: 1fr; } } }
+        @media (max-width: 768px) { .grid-grafik { grid-template-columns: 1fr; } .grid-persentase-kartu { grid-template-columns: 1fr; } }
 
         .chart-wrapper { position: relative; height: 260px; width: 100%; }
         .tabel-rekap-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 10px; }
@@ -142,20 +180,21 @@
 </head>
 <body>
 
+<img src="mandala.png" class="mandala-hiasan mandala-kiri" alt="Mandala Kiri">
+<img src="mandala.png" class="mandala-hiasan mandala-kanan" alt="Mandala Kanan">
+
 <div class="container">
     <header>
         <img src="logo parepare.png" alt="Logo Kota Parepare">
         <h1>Sistem Informasi Terpadu PPA <span>Dinas Pemberdayaan Perempuan dan Perlindungan Anak Kota Parepare</span></h1>
     </header>
 
-    <!-- Halaman 1: Menu Utama -->
     <div id="pageMenu" class="page active">
         <div class="menu-container">
             <button class="btn-kustom-glow" onclick="bukaSubMenu()">Masuk Ke Dashboard Terpadu</button>
         </div>
     </div>
 
-    <!-- Halaman 2: 2 Pilihan Cabang (Real-time vs Dashboard Tetap) -->
     <div id="pageSubMenu" class="page">
         <button class="btn-back" onclick="pindahHalaman('pageMenu')">&larr; Kembali ke Menu Utama</button>
         <div class="menu-container">
@@ -165,7 +204,6 @@
         </div>
     </div>
 
-    <!-- Halaman 3: Opsi Dashboard Tetap (Data Penduduk Perempuan & Anak) -->
     <div id="pageStatis" class="page">
         <button class="btn-back" onclick="pindahHalaman('pageSubMenu')">&larr; Kembali ke Pilihan</button>
         
@@ -240,7 +278,6 @@
         </div>
     </div>
 
-    <!-- Halaman 4: Opsi Dashboard Real-Time (Kekerasan, Dispensasi, & Perkawinan) -->
     <div id="pageRealtime" class="page">
         <button class="btn-back" onclick="pindahHalaman('pageSubMenu')">&larr; Kembali ke Pilihan</button>
         
@@ -257,7 +294,6 @@
 
         <div id="statusKoneksiSheets" class="loading-text" style="display:none;">Sedang Menghubungkan ke 3 Sheet Google Spreadsheet...</div>
 
-        <!-- Bagian 1: Data Kasus Kekerasan -->
         <div class="chart-box">
             <h3>A. DATA KASUS KEKERASAN PEREMPUAN & ANAK (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -275,7 +311,6 @@
             </div>
         </div>
 
-        <!-- Bagian 2: Data Dispensasi Kawin -->
         <div class="chart-box">
             <h3>B. REKAP DISPENSASI NIKAH PER KECAMATAN (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -293,7 +328,6 @@
             </div>
         </div>
 
-        <!-- Bagian 3: Data Perkawinan Anak -->
         <div class="chart-box">
             <h3>C. DATA PERKAWINAN KELOMPOK UMUR ANAK (<span class="lblTahun">2025</span>)</h3>
             <div class="tabel-rekap-wrapper">
@@ -331,7 +365,6 @@
 <script>
     const SPREADSHEET_ID = '13akgb9gjS538f4C0RM3RlLd6uhoUMv30TRdzDLNlU_o';
     
-    // Endpoint Link CSV Ekspor untuk masing-masing tab/sheet
     const URL_TAB_KEKERASAN = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     const URL_TAB_DISPENSASI = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=406620483`;
     const URL_TAB_PENDUDUK = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=2038099255`;
@@ -386,7 +419,6 @@
     async function ambilSemuaDataGoogleSheets() {
         document.getElementById('statusKoneksiSheets').style.display = 'block';
         try {
-            // Basis Data Cadangan jika sambungan sheets terputus/masih kosong
             dataRtKekerasan = {
                 "2021": {ktp: 5, kta: 16, kdrt: 20, total: 41},
                 "2022": {ktp: 9, kta: 37, kdrt: 20, total: 66},
@@ -409,28 +441,23 @@
                 "2025": {bb18:0, bb19:2, b18:12, b19:23, u18:2, u19:4, s18:28, s19:58}
             };
 
-            // Menggunakan fetch untuk cross-check pembaruan
             await Promise.all([ fetch(URL_TAB_KEKERASAN), fetch(URL_TAB_DISPENSASI) ]);
-            console.log("Koneksi 3 Tab Google Sheets Berhasil.");
         } catch (e) {
-            console.log("Menggunakan database lokal lokal.");
+            console.log("Menggunakan database lokal.");
         }
         document.getElementById('statusKoneksiSheets').style.display = 'none';
         prosesPerubahanTahun(document.getElementById('pilihTahun').value);
     }
 
     function prosesPerubahanTahun(thn) {
-        // Ganti semua label tahun di dashboard
         document.querySelectorAll('.lblTahun').forEach(el => el.innerText = thn);
 
-        // 1. Update Tab Kasus Kekerasan
         const kks = dataRtKekerasan[thn] || {ktp:0, kta:0, kdrt:0, total:0};
         document.getElementById('cellKTP').innerText = kks.ktp;
         document.getElementById('cellKTA').innerText = kks.kta;
         document.getElementById('cellKDRT').innerText = kks.kdrt;
         document.getElementById('cellTotalKekerasan').innerText = kks.total;
 
-        // 2. Update Tab Dispensasi Nikah
         const dsp = dataRtDispensasi[thn] || {bcu:0, ujg:0, srg:0, bcb:0, tot:0};
         document.getElementById('dispBacukiki').innerText = dsp.bcu;
         document.getElementById('dispUjung').innerText = dsp.ujg;
@@ -438,7 +465,6 @@
         document.getElementById('dispBacubarat').innerText = dsp.bcb;
         document.getElementById('dispTotal').innerText = dsp.tot;
 
-        // 3. Update Tab Perkawinan Anak
         const kwn = dataRtPerkawinan[thn] || {bb18:0, bb19:0, b18:0, b19:0, u18:0, u19:0, s18:0, s19:0};
         document.getElementById('kawinBB18').innerText = kwn.bb18;
         document.getElementById('kawinBB19').innerText = kwn.bb19;
@@ -449,7 +475,6 @@
         document.getElementById('kawinS18').innerText = kwn.s18;
         document.getElementById('kawinS19').innerText = kwn.s19;
 
-        // Update Grafik Interaktif
         renderUlangGrafikRealtime(kks, dsp);
     }
 
