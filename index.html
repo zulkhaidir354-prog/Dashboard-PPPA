@@ -10,13 +10,12 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(to bottom, #020617 0%, #0f172a 50%, #111e3f 80%, rgba(240, 246, 255, 0.25) 100%);
-            /* Box kontainer transparan sisa 25% */
             --card-bg: rgba(15, 23, 42, 0.25);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
             --primary-blue: #38bdf8;
             --bright-white: #f8fafc;
-            --border-glow: rgba(56, 189, 248, 0.65); /* Garis pinggir bercahaya dipertahankan tegas */
+            --border-glow: rgba(56, 189, 248, 0.65);
             --btn-blue: linear-gradient(145deg, #38bdf8, #0284c7);
         }
 
@@ -43,7 +42,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Perbaikan esktensi huruf besar agar sinkron dengan GitHub Pages */
             background-image: url('./PERAHU.JPG');
             background-repeat: no-repeat;
             background-position: center;
@@ -53,12 +51,11 @@
             pointer-events: none;
         }
 
-        /* --- Mandala Sisi Kiri dan Kanan --- */
         .mandala-hiasan {
             position: fixed;
             width: 700px; 
             height: 700px;
-            opacity: 0.15; 
+            opacity: 1.0; 
             z-index: 0;
             pointer-events: none;
             top: 50%;
@@ -85,7 +82,6 @@
             100% { transform: translateY(-50%) rotate(0deg); }
         }
 
-        /* Ukuran logo diperkecil agar layout naik ke atas */
         .logo-3d-putar {
             height: 95px;
             margin-bottom: 15px;
@@ -141,7 +137,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Ukuran box ringkas terhindar dari scroll layar 100% */
         .container {
             width: 100%;
             max-width: 780px;
@@ -197,7 +192,6 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Jarak komponen menu yang naik ke tengah-atas secara seimbang */
         .menu-container {
             display: flex;
             flex-direction: column;
@@ -228,7 +222,6 @@
         .btn-kustom-glow:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(56, 189, 248, 0.8); color: white; }
         .btn-back { background: #475569; padding: 8px 16px; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 15px; font-weight: bold; font-size: 12px; }
 
-        /* Box chart transparan sisa 25% */
         .chart-box {
             background: rgba(15, 23, 42, 0.25);
             padding: 20px;
@@ -291,8 +284,8 @@
     <div class="teks-loading" id="txtLoading">SEDANG MEMUAT DATA...</div>
 </div>
 
-<img src="mandala.png" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri Baru">
-<img src="mandala.png" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan Baru">
+<img src="mandala.png" class="mandala-hiasan mandala-kiri-center" alt="Mandala Kiri">
+<img src="mandala.png" class="mandala-hiasan mandala-kanan-center" alt="Mandala Kanan">
 
 <div class="container mini-view" id="mainContainer">
     <header>
@@ -404,6 +397,9 @@
                 <option value="2023">2023</option>
                 <option value="2022">2022</option>
                 <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
             </select>
         </div>
 
@@ -472,7 +468,33 @@
         </div>
 
         <div class="chart-box">
-            <h3>GRAFIK TREN FLUKTUASI TAHUNAN AKUMULATIF (2021 - 2025)</h3>
+            <h3>D. Predikat KLA Kota Parepare (<span class="lblTahun">2025</span>)</h3>
+            <div class="tabel-rekap-wrapper">
+                <table class="tabel-dasbor-modern">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">Indikator Capaian</th>
+                            <th>Kategori Tingkatan Predikat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left; font-weight:bold;">Evaluasi Kota Layak Anak (KLA)</td>
+                            <td id="cellKLA_Value" style="font-weight:800; color:var(--primary-blue); font-size:14px; letter-spacing:0.5px;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="sumber-data-label">Sumber Data: Kementerian PPPA Republik Indonesia</span>
+        </div>
+
+        <div class="chart-box">
+            <h3>GRAFIK TREN PREDIKAT KLA KOTA PAREPARE (2018 - 2025)</h3>
+            <div class="chart-wrapper-full"><canvas id="chartKLAMandiri"></canvas></div>
+        </div>
+
+        <div class="chart-box">
+            <h3>GRAFIK TREN FLUKTUASI TAHUNAN AKUMULATIF (2018 - 2025)</h3>
             <div class="chart-wrapper-full"><canvas id="chartFluktuasiTahunan"></canvas></div>
         </div>
 
@@ -491,6 +513,9 @@
 
 <script>
     let dataRtKekerasan = {
+        "2018": {ktp: 0, kta: 0, kdrt: 0, total: 0},
+        "2019": {ktp: 0, kta: 0, kdrt: 0, total: 0},
+        "2020": {ktp: 0, kta: 0, kdrt: 0, total: 0},
         "2021": {ktp: 5, kta: 16, kdrt: 20, total: 41},
         "2022": {ktp: 9, kta: 37, kdrt: 20, total: 66},
         "2023": {ktp: 8, kta: 39, kdrt: 18, total: 65},
@@ -499,6 +524,9 @@
     };
 
     let dataRtDispensasi = {
+        "2018": {bb: 0, b: 0, u: 0, s: 0, tot: 0},
+        "2019": {bb: 0, b: 0, u: 0, s: 0, tot: 0},
+        "2020": {bb: 0, b: 0, u: 0, s: 0, tot: 0},
         "2021": {bb: 35, b: 28, u: 25, s: 40, tot: 128},
         "2022": {bb: 30, b: 25, u: 24, s: 40, tot: 119},
         "2023": {bb: 15, b: 12, u: 15, s: 23, tot: 65},
@@ -507,6 +535,9 @@
     };
 
     let dataRtPerkawinan = {
+        "2018": {bb18: 0, bb19: 0, b18: 0, b19: 0, u18: 0, u19: 0, s18: 0, s19: 0, t18: 0, t19: 0},
+        "2019": {bb18: 0, bb19: 0, b18: 0, b19: 0, u18: 0, u19: 0, s18: 0, s19: 0, t18: 0, t19: 0},
+        "2020": {bb18: 0, bb19: 0, b18: 0, b19: 0, u18: 0, u19: 0, s18: 0, s19: 0, t18: 0, t19: 0},
         "2021": {bb18: 12, bb19: 15, b18: 8, b19: 10, u18: 11, u19: 14, s18: 15, s19: 20, t18: 46, t19: 59},
         "2022": {bb18: 14, bb19: 18, b18: 9, b19: 12, u18: 10, u19: 11, s18: 16, s19: 22, t18: 49, t19: 63},
         "2023": {bb18: 20, bb19: 0, b18: 12, b19: 8, u18: 19, u19: 0, s18: 6, s19: 0, t18: 57, t19: 8},
@@ -514,9 +545,22 @@
         "2025": {bb18: 0, bb19: 2, b18: 12, b19: 23, u18: 2, u19: 4, s18: 28, s19: 58, t18: 42, t19: 87}
     };
 
+    // Sinkronisasi Sempurna Data Berdasarkan Link Spreadsheet Pengguna
+    let dataRtPredikatKLA = {
+        "2018": "Pratama",
+        "2019": "Madya",
+        "2020": "Tidak Ada Evaluasi",
+        "2021": "Nindya",
+        "2022": "Nindya",
+        "2023": "Nindya",
+        "2024": "Madya",
+        "2025": "Madya"
+    };
+
     let objChartKekerasan = null;
     let objChartDispensasi = null;
     let objChartFluktuasi = null;
+    let objChartKLAMandiri = null;
     let chartDonutStatis = null;
     let chartPieStatis = null;
 
@@ -579,35 +623,84 @@
     function bukaDashboardRealtime() {
         ubahLayoutNormal();
         renderGrafikFluktuasiTahunan();
+        renderGrafikKLAMandiri();
         prosesPerubahanTahun(document.getElementById('pilihTahun').value);
+    }
+
+    function renderGrafikKLAMandiri() {
+        if(objChartKLAMandiri) objChartKLAMandiri.destroy();
+
+        const labelsX = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+        // 2020 diset null agar garis melompati tahun corona secara logis & presisi
+        const dataY = [1, 2, null, 3, 3, 3, 2, 2]; 
+
+        objChartKLAMandiri = new Chart(document.getElementById('chartKLAMandiri'), {
+            type: 'line',
+            data: {
+                labels: labelsX,
+                datasets: [{
+                    label: 'Capaian Predikat KLA',
+                    data: dataY,
+                    borderColor: '#fbbf24',
+                    backgroundColor: 'rgba(251, 191, 36, 0.15)',
+                    borderWidth: 4,
+                    pointRadius: 7,
+                    pointHoverRadius: 9,
+                    pointBackgroundColor: '#fbbf24',
+                    fill: true,
+                    spanGaps: true,
+                    tension: 0.0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#f8fafc' } } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } },
+                    y: {
+                        min: 1, max: 5,
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: {
+                            color: '#fbbf24',
+                            stepSize: 1,
+                            callback: function(value) {
+                                let rentangPredikat = { 1: 'Pratama', 2: 'Madya', 3: 'Nindya', 4: 'Utama', 5: 'KLA' };
+                                return rentangPredikat[value] || '';
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     function renderGrafikFluktuasiTahunan() {
         if(objChartFluktuasi) objChartFluktuasi.destroy();
         
-        const tahunLabels = ["2021", "2022", "2023", "2024", "2025"];
-        const trenTotalKasus = [41, 66, 65, 82, 99];
-        const trenKDRT = [20, 20, 18, 27, 2];
-        const trenDispensasi = [128, 119, 65, 70, 124];
-        const trenKawinAnak18 = [46, 49, 57, 38, 42];
-        const trenKTA = [16, 37, 39, 40, 61];
+        const tahunLabels = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+        const trenTotalKasus = [0, 0, 0, 41, 66, 65, 82, 99];
+        const trenKDRT = [0, 0, 0, 20, 20, 18, 27, 2];
+        const trenDispensasi = [0, 0, 0, 128, 119, 65, 70, 124];
+        const trenKawinAnak18 = [0, 0, 0, 46, 49, 57, 38, 42];
+        const trenKTA = [0, 0, 0, 16, 37, 39, 40, 61];
 
         objChartFluktuasi = new Chart(document.getElementById('chartFluktuasiTahunan'), {
             type: 'line',
             data: {
                 labels: tahunLabels,
                 datasets: [
-                    { label: 'Total Kasus Kekerasan', data: trenTotalKasus, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', borderWidth: 3, pointRadius: 5, tension: 0.2 },
-                    { label: 'Kekerasan Terhadap Anak (KTA)', data: trenKTA, borderColor: '#4ade80', borderWidth: 2.5, pointRadius: 4, borderDash: [5, 5], tension: 0.2, fill: false },
-                    { label: 'Kasus KDRT', data: trenKDRT, borderColor: '#eab308', borderWidth: 2, pointRadius: 4, borderDash: [5, 5], tension: 0.2, fill: false },
-                    { label: 'Total Dispensasi Nikah', data: trenDispensasi, borderColor: '#38bdf8', borderWidth: 3, pointRadius: 5, tension: 0.2 },
-                    { label: 'Perkawinan Anak (<18 Thn)', data: trenKawinAnak18, borderColor: '#a78bfa', borderWidth: 2.5, pointRadius: 4, tension: 0.2 }
+                    { label: 'Total Kasus Kekerasan', data: trenTotalKasus, borderColor: '#ef4444', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 4, tension: 0.2 },
+                    { label: 'Kekerasan Terhadap Anak (KTA)', data: trenKTA, borderColor: '#4ade80', borderWidth: 2, pointRadius: 3, borderDash: [5, 5], tension: 0.2, fill: false },
+                    { label: 'Kasus KDRT', data: trenKDRT, borderColor: '#eab308', borderWidth: 1.5, pointRadius: 3, borderDash: [5, 5], tension: 0.2, fill: false },
+                    { label: 'Total Dispensasi Nikah', data: trenDispensasi, borderColor: '#38bdf8', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 4, tension: 0.2 },
+                    { label: 'Perkawinan Anak (<18 Thn)', data: trenKawinAnak18, borderColor: '#a78bfa', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, tension: 0.2 }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#f8fafc', font: { size: 11 } } } },
+                plugins: { legend: { labels: { color: '#f8fafc', font: { size: 10 } } } },
                 scales: {
                     x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } },
                     y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#cbd5e1' } }
@@ -644,6 +737,8 @@
         
         document.getElementById('kawinTotal18').innerText = kwn.t18;
         document.getElementById('kawinTotal19').innerText = kwn.t19;
+
+        document.getElementById('cellKLA_Value').innerText = dataRtPredikatKLA[thn] || "-";
 
         renderUlangGrafikRealtime(kks);
     }
